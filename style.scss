@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Staatliches');
+
 html {
   box-sizing: border-box;
 }
@@ -9,13 +11,70 @@ html {
 }
 
 body {
-  height: 100vh;
   margin: 0;
-  background-color: #21374b;
+  height: 100vh;
+  background-color: #FAD4D4;
+  overflow: hidden;
 }
 
 #canvas {
-  height: 100vh;
   width: 100vw;
   visibility: hidden;
+}
+
+.button-container {
+  width: 100vw;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  position: relative;
+  width:60px;
+  height:60px;
+  display:block;
+  text-align:center;
+  margin:0 10px;
+  border-radius: 50%;
+  padding: 6px;
+  text-decoration:none;
+  box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+  background: linear-gradient(0deg, #ddd, #fff);
+  transition: 500ms;
+  cursor: pointer;
+
+  .fa {
+    width: 100%;
+    height:100%;
+    display:block;
+    background: linear-gradient(0deg, #fff, #ddd);
+    border-radius: 50%;
+    line-height: calc(60px - 14px);
+    font-size:24px;
+    color: #262626;
+    transition: .5s;
+  }
+
+  &:hover {
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+
+    .fa {
+      color: #a30000;
+    }
+  }
+
+  &:focus {
+    outline: none;
+    .fa {
+      color: #a30000;
+    }
+  }
+
+  &:active {
+    border-color: rgb(216, 216, 216) rgb(209, 209, 209) rgb(186, 186, 186);
+    .fa {
+      color: red;
+    }
+  }
 }
