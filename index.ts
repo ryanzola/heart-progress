@@ -1,4 +1,4 @@
-import { TweenMax, TimelineMax, Linear, Sine, Elastic } from 'gsap';
+import { TweenMax, TimelineMax, Linear, Sine } from 'gsap';
 import './src/plugins/DrawSVGPlugin.min.js';
 import './src/plugins/Physics2DPlugin.min.js';
 import GSDevTools from './src/utils/GSDevTools.min.js';
@@ -19,12 +19,12 @@ class App {
   particlesRight = this.selectAll('#particles-right circle');
   check = this.select('#check');
   button = this.select('button');
+  index = 0;
   
   constructor() {
     TweenMax.set(this.check, {transformOrigin: 'center center', rotation: '-=90', scale: 0, opacity: 0})
     TweenMax.set(this.ekgOuter, {opacity: '0.3'})
     TweenMax.set(this.progressInner, {opacity: '0.3'})
-    // TweenMax.set([this.progressInner, this.progressOuter], {opacity: '0.3'})
     TweenMax.set([this.ekgOuter, this.ekgInner], {drawSVG: '0% 0%'})
     TweenMax.set([this.progressInner, this.progressOuter], {drawSVG: '0%'})
     
@@ -33,8 +33,8 @@ class App {
     .fromTo([this.ekgOuter, this.ekgInner], 0.3, {drawSVG: '0%'}, {drawSVG: '0% 30%', ease: Linear.easeNone}) // enter
     .to([this.ekgOuter, this.ekgInner], 1, {drawSVG: '70% 100%', ease: Linear.easeNone}) // draw through as 30% segment
     .to([this.ekgOuter, this.ekgInner], 0.3, {drawSVG: '100% 100%', ease: Linear.easeNone})
-    .addCallback(this.playParticles, '-=1.2', [this.particlesLeft])
-    .addCallback(this.playParticles, '-=0.85', [this.particlesRight])
+    .call(this.playParticles, [], this, '-=1.2')
+    .call(this.playParticles, [], this, '-=0.85')
      
     let frontLiquidTimeline = new TimelineMax({repeat:-1});
     frontLiquidTimeline.from('#liquid-front', 3, {
@@ -77,7 +77,6 @@ class App {
 
       if (progressNumber < 100) {
         progressNumber +=10;
-        console.log(progressNumber);
         TweenMax.to(['#liquid-front', '#liquid-back'], 0.5, {y: '-=14'})
         TweenMax.to([this.progressInner, this.progressOuter], 0.5, {
           drawSVG: progressNumber + '%'
@@ -108,10 +107,27 @@ class App {
     })
 
     this.mainTl
+    .add(this.init, 0)
     .add(ekgTl, 0)
     .add(frontLiquidTimeline, 0)
     .add(backLiquidTimeline, 0)
   
+  }
+
+  init() {
+    let select = s => document.querySelector(s);
+    let selectAll = s => document.querySelectorAll(s);
+    this.liquidFront = select('#liquid-front')
+    this.liquidBack = select('#liquid-back')
+    this.ekgOuter = select('#ekg-outer');
+    this.ekgInner = select('#ekg-inner');
+    this.progressInner = select('#progress-line-inner')
+    this.progressOuter = select('#progress-line-outer')
+    this.bubbles = selectAll('#liquid-bubbles circle')
+    this.particlesLeft = selectAll('#particles-left circle');
+    this.particlesRight = selectAll('#particles-right circle');
+    this.check = select('#check');
+    this.button = select('button');
   }
 
   randomBetween = (min: number, max: number): number => {
@@ -127,8 +143,9 @@ class App {
     })
   }
 
-  playParticles = (pArray: Array<Object>) => {
-    let d = pArray;
+  playParticles(): void {
+    let pLR = [this.particlesLeft, this.particlesRight]
+    let d = this.index === 0 ? pLR[0] : pLR[1];
     let i = d.length;
 
     for(let p of d) {
@@ -157,6 +174,13 @@ class App {
         scale: 0
       });
     }
+    
+    if (this.index === 0) {
+      this.index = 1
+    } 
+    else if (this.index === 1) {
+      this.index = 0
+    }
   }
 }
 
@@ -166,4 +190,4 @@ TweenMax.set('svg',{
 })
 
 // GSDevTools.create();
-let app = new App();
+new App();

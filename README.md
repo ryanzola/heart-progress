@@ -1,5 +1,8 @@
 # Heart/EKG Progress Bar
 
+## Check it out...
+http://ekg-heart.surge.sh/
+
 ## The run down...
 For this demo (and most of my demos), I've come to really enjoy the quickness and ease of spinning up a project with Parcel. IT. JUST. WORKS. If you want to use some css preprocessors like sass or scss, you just create a sass or scss file and add it to your index. The same with typescript, which Ive come to really love for these little projects as it keeps my code a little more structured and clean.
 
